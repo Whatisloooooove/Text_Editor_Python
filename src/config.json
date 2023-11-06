@@ -11,7 +11,7 @@
             "builtins": [
                 "abs", "int", "str", "float", "list", "dict", "set", "len", "range", "map",
                 "filter", "print", "input", "open", "write", "read", "close", "super", "isinstance",
-                "type", "enumerate", "zip", "sorted", "max", "min", "sum"
+                "type", "enumerate", "zip", "sorted", "max", "min", "sum", "split"
             ],
             "styles": {
                 "operators": {

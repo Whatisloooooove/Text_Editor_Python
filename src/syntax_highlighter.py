@@ -41,13 +41,13 @@ class SyntaxHighlighter:
             start = '1.0'
             while True:
                 start = self.text_field.search(
-                    rf'(^|\s){re.escape(item)}(?=\s)',
+                    rf'{re.escape(item)}',
                     start, tk.END,
                     regexp=True
                 )
                 if not start:
                     break
-                end = f"{start}+{len(item + ' ')}c"
+                end = f"{start}+{len(item)}c"
                 self.text_field.tag_add(tag_name, start, end)
                 self.text_field.tag_config(tag_name, **style)
                 start = end

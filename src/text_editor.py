@@ -2,8 +2,8 @@ import tkinter as tk
 import json
 import os
 from tkinter import messagebox
-from file_editor import FileEditor
-from syntax_highlighter import SyntaxHighlighter
+from src.file_editor import FileEditor
+from src.syntax_highlighter import SyntaxHighlighter
 
 
 class TextEditor:
@@ -19,34 +19,15 @@ class TextEditor:
         self.f_text.pack(fill=tk.BOTH, expand=1)
 
         self.current_language = "python"
+        self.add_text_field()
+        self.add_scroll()
+        self.view_data()
+        self.file_editor = FileEditor(self.text_field)
+        self.syntax_highlighter = SyntaxHighlighter(self.text_field, self)
+        self.create_menu()
+        self.add_keys()
 
-        self.view_colour = {
-            'dark': {
-                'text_bg': '#2d2a2e',
-                'text_fg': 'white',
-                'cursor': 'white',
-                'select': '#434144'
-            },
-            'light': {
-                'text_bg': '#F2F3F4',
-                'text_fg': 'black',
-                'cursor': 'black',
-                'select': '#434144'
-            }
-        }
-
-        self.fonts = {
-            'Arial': {
-                'font': 'Arial 14 bold'
-            },
-            'ComicSans MS': {
-                'font': ('ComicSans MS', 14, 'bold')
-            },
-            'Times New Roman': {
-                'font': ('Times New Roman', 14, 'bold')
-            }
-        }
-
+    def add_text_field(self):
         self.text_field = tk.Text(self.f_text,
                                   bg='#2d2a2e',
                                   fg='white',
@@ -60,7 +41,7 @@ class TextEditor:
         self.text_field.pack(fill=tk.BOTH, expand=1, side=tk.LEFT)
         self.text_field.config(highlightthickness=0)
 
-        # Create Scroll
+    def add_scroll(self):
         self.scroll = tk.Scrollbar(self.f_text,
                                    command=self.text_field.yview,
                                    troughcolor="#2d2a2e",
@@ -70,38 +51,35 @@ class TextEditor:
                                    highlightthickness=0
                                    )
         self.scroll.pack(side=tk.LEFT, fill=tk.Y)
-
         self.text_field.config(yscrollcommand=self.scroll.set)
-
-        self.file_editor = FileEditor(self.text_field)
-        self.syntax_highlighter = SyntaxHighlighter(self.text_field, self)
-
-        self.create_menu()
-        self.add_keys()
 
     def add_keys(self):
         # Добавляю кнопки для перемещения по тексту
-        root.bind("<Left>", lambda event: self.file_editor.move_cursor_left())
-        root.bind(
-            "<Right>",
-            lambda event: self.file_editor.move_cursor_right())
-        root.bind(
-            "<Home>",
-            lambda event: self.file_editor.move_to_start_of_line())
-        root.bind(
-            "<End>",
-            lambda event: self.file_editor.move_to_end_of_line())
+        self.root.bind("<Left>",
+                       lambda event: self.file_editor.move_cursor_left())
+        self.root.bind("<Right>",
+                       lambda event: self.file_editor.move_cursor_right())
+        self.root.bind("<Home>",
+                       lambda event: self.file_editor.move_to_start_of_line())
+        self.root.bind("<End>",
+                       lambda event: self.file_editor.move_to_end_of_line())
 
         # Добавляю хоткеи для сохранения,открытия и выхода
-        root.bind("<Control-s>", lambda event: self.file_editor.save_file())
-        root.bind("<Control-o>", lambda event: self.file_editor.open_file())
-        root.bind("<Control-q>", lambda event: self.button_exit())
+        self.root.bind("<Control-s>",
+                       lambda event: self.file_editor.save_file())
+        self.root.bind("<Control-o>",
+                       lambda event: self.file_editor.open_file())
+        self.root.bind("<Control-q>", lambda event: self.button_exit())
 
         # Хоткеи для удаления строки/слов, выделения текста и поиска по тексту
-        root.bind("<Control-d>", lambda event: self.file_editor.delete_line())
-        root.bind("<Control-w>", lambda event: self.file_editor.delete_word())
-        root.bind("<Control-a>", lambda event: self.file_editor.select_all())
-        root.bind("<Control-f>", lambda event: self.show_search_replace_dialog())
+        self.root.bind("<Control-d>",
+                       lambda event: self.file_editor.delete_line())
+        self.root.bind("<Control-w>",
+                       lambda event: self.file_editor.delete_word())
+        self.root.bind("<Control-a>",
+                       lambda event: self.file_editor.select_all())
+        self.root.bind("<Control-f>",
+                       lambda event: self.show_search_replace_dialog())
 
         # Делаю так , чтобы слово подсвечивалось сразу после ввода
         self.text_field.bind(
@@ -110,7 +88,13 @@ class TextEditor:
                 self.current_language))
 
     def create_menu(self):
-        # File Menu
+        self.root.config(bg="#434144", menu=self.main_menu)
+        self.create_file_menu()
+        self.create_view_menu()
+        self.create_search_and_replace()
+        self.create_syntax_highlight()
+
+    def create_file_menu(self):
         file_menu = tk.Menu(self.main_menu, tearoff=0)
         file_menu.add_command(
             label='Открыть',
@@ -135,33 +119,20 @@ class TextEditor:
             background='#434144',
             foreground='white')
 
-        # View Menu
+        self.main_menu.add_cascade(label='File', menu=file_menu)
+        self.main_menu.entryconfig('File', foreground='white')
+
+    def create_view_menu(self):
         view_menu = tk.Menu(self.main_menu, tearoff=0)
+        self.create_view_sub(view_menu)
+        self.create_font_sub(view_menu)
 
-        # Настраиваю раздел с темами
-        view_menu_sub = tk.Menu(view_menu, tearoff=0)
+        self.main_menu.add_cascade(label='View', menu=view_menu)
+        self.main_menu.entryconfig('View', foreground='white')
+
+    # Выбор шрифта
+    def create_font_sub(self, view_menu):
         font_menu_sub = tk.Menu(view_menu, tearoff=0)
-
-        view_menu_sub.add_command(
-            label='Тёмная тема',
-            command=lambda: self.change_theme('dark'))
-        view_menu_sub.add_command(
-            label='Светлая тема',
-            command=lambda: self.change_theme('light'))
-
-        view_menu_sub.entryconfig(
-            'Светлая тема',
-            background='#434144',
-            foreground='white')
-        view_menu_sub.entryconfig(
-            'Тёмная тема',
-            background='#434144',
-            foreground='white')
-
-        view_menu.add_cascade(label='Тема', menu=view_menu_sub)
-        view_menu.entryconfig('Тема', background='#434144', foreground='white')
-
-        # Настраиваю раздел со шрифтами
         font_menu_sub.add_command(label='Arial',
                                   command=lambda: self.change_font('Arial'))
         font_menu_sub.add_command(
@@ -190,14 +161,29 @@ class TextEditor:
             background='#434144',
             foreground='white')
 
-        self.main_menu.add_cascade(label='File', menu=file_menu)
-        self.main_menu.add_cascade(label='View', menu=view_menu)
-        self.main_menu.entryconfig('File', foreground='white')
-        self.main_menu.entryconfig('View', foreground='white')
+    # Выбор темы
+    def create_view_sub(self, view_menu):
+        view_menu_sub = tk.Menu(view_menu, tearoff=0)
+        view_menu_sub.add_command(
+            label='Тёмная тема',
+            command=lambda: self.change_theme('dark'))
+        view_menu_sub.add_command(
+            label='Светлая тема',
+            command=lambda: self.change_theme('light'))
 
-        self.root.config(bg="#434144", menu=self.main_menu)
+        view_menu_sub.entryconfig(
+            'Светлая тема',
+            background='#434144',
+            foreground='white')
+        view_menu_sub.entryconfig(
+            'Тёмная тема',
+            background='#434144',
+            foreground='white')
 
-        # Настраиваю на панели кнопку для поиска и замены
+        view_menu.add_cascade(label='Тема', menu=view_menu_sub)
+        view_menu.entryconfig('Тема', background='#434144', foreground='white')
+
+    def create_search_and_replace(self):
         search_replace_menu = tk.Menu(self.main_menu, tearoff=0)
         search_replace_menu.add_command(
             label='Найти и заменить',
@@ -211,7 +197,7 @@ class TextEditor:
             menu=search_replace_menu)
         self.main_menu.entryconfig('Search and replace', foreground='white')
 
-        # Добавляю кнопки в меню для смены подсветки языка
+    def create_syntax_highlight(self):
         language_menu = tk.Menu(self.main_menu, tearoff=0)
         script_directory = os.path.dirname(__file__)
         config_file_path = os.path.join(script_directory, 'config.json')
@@ -225,6 +211,34 @@ class TextEditor:
                     f'{language}', background='#434144', foreground='white')
         self.main_menu.add_cascade(label='Language', menu=language_menu)
         self.main_menu.entryconfig('Language', foreground='white')
+
+    def view_data(self):
+        self.view_colour = {
+            'dark': {
+                'text_bg': '#2d2a2e',
+                'text_fg': 'white',
+                'cursor': 'white',
+                'select': '#434144'
+            },
+            'light': {
+                'text_bg': '#F2F3F4',
+                'text_fg': 'black',
+                'cursor': 'black',
+                'select': '#434144'
+            }
+        }
+
+        self.fonts = {
+            'Arial': {
+                'font': 'Arial 14 bold'
+            },
+            'ComicSans MS': {
+                'font': ('ComicSans MS', 14, 'bold')
+            },
+            'Times New Roman': {
+                'font': ('Times New Roman', 14, 'bold')
+            }
+        }
 
     # Метод для изменения темы
     def change_theme(self, theme):
@@ -284,8 +298,5 @@ class TextEditor:
         self.current_language = new_language
         self.syntax_highlighter.load_language(new_language)
 
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    editor = TextEditor(root)
-    root.mainloop()
+    def run(self, root):
+        root.mainloop()

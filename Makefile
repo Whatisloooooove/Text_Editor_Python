@@ -1,2 +1,2 @@
 run:
-	python3 text_editor.py
+	python3 main.py
