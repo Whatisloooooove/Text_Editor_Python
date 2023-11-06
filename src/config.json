@@ -1,0 +1,78 @@
+{
+    "languages": {
+        "python": {
+            "operators": ["+", "-", "*", "/", "%", "=", ">", "<", "==", "!=", ">=", "<=", "++", "--", "&&", "||", "!", "&", "|", "^", "<<", ">>", "~", "{", "}", "(", ")", "+=", "-=", "*=", "/=", "%=", "()"],
+            "keywords": [
+                "if", "else", "elif", "while", "for", "in", "break", "continue", "return",
+                "and", "or", "not", "is", "None", "True", "False", "assert", "with", "as",
+                "class", "def", "from", "import", "try", "except", "finally", "raise", "global",
+                "nonlocal", "lambda", "yield", "async", "await"
+            ],
+            "builtins": [
+                "abs", "int", "str", "float", "list", "dict", "set", "len", "range", "map",
+                "filter", "print", "input", "open", "write", "read", "close", "super", "isinstance",
+                "type", "enumerate", "zip", "sorted", "max", "min", "sum", "split"
+            ],
+            "styles": {
+                "operators": {
+                    "foreground": "#FB607F"
+                },
+                "keywords": {
+                    "foreground": "#77DD77"
+                },
+                "builtins": {
+                    "foreground": "#78DBE2"
+                }
+            }
+        },
+        "java": {
+            "operators": ["+", "-", "*", "/", "%", "=", ">", "<", "==", "!=", ">=", "<=", "++", "--", "&&", "||", "!", "&", "|", "^", "<<", ">>", "~", "{", "}", "(", ")", "+=", "-=", "*=", "/=", "%=", "()"],
+            "keywords": [
+                "if", "else", "while", "for", "do", "switch", "case", "break", "continue", "return",
+                "public", "private", "protected", "static", "final", "abstract", "class", "interface", "extends", "implements",
+                "void", "int", "long", "double", "float", "char", "boolean", "byte", "short", "new", "this", "super",
+                "try", "catch", "finally", "throw", "throws", "import", "package", "instanceof", "null", "true", "false"
+            ],
+            "builtins": [
+                "System.out.println", "Math.abs", "String.length", "ArrayList.add", "HashMap.containsKey",
+                "Integer.parseInt", "Double.parseDouble", "Array.length", "File.exists"
+            ],
+            "styles": {
+                "operators": {
+                    "foreground": "#FB607F"
+                },
+                "keywords": {
+                    "foreground": "#78DBE2"
+                },
+                "builtins": {
+                    "foreground": "#CDA4DE"
+                }
+            }
+        },
+        "c++": {
+            "operators":["+", "-", "*", "/", "%", "=", ">", "<", "==", "!=", ">=", "<=", "++", "--", "&&", "||", "!", "&", "|", "^", "<<", ">>", "~", "{", "}", "(", ")", "+=", "-=", "*=", "/=", "%=", "()"],
+            "keywords": [
+                "if", "else", "while", "for", "do", "switch", "case", "break", "continue", "return",
+                "public", "private", "protected", "static", "final", "class", "struct", "template", "typename", "typedef", "namespace",
+                "void", "int", "long", "double", "float", "char", "bool", "unsigned", "new", "this",
+                "try", "catch", "throw", "include", "define", "const", "virtual", "operator", "friend",
+                "nullptr", "true", "false"
+            ],
+            "builtins": [
+                "std::cout", "std::cin", "std::endl", "printf", "scanf", "malloc", "free", "memset",
+                "std::string", "std::vector", "std::map", "std::set", "std::list"
+            ],
+            "styles": {
+                "operators": {
+                    "foreground": "#77DD77"
+                },
+                "keywords": {
+                    "foreground": "#F64A46"
+                },
+                "builtins": {
+                    "foreground": "#F984E5"
+                }
+            }
+        }
+    }
+}
