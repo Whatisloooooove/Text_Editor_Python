@@ -1,6 +1,1 @@
-tkinter
-json
-os
-re
-filedialog from tkinter
-messagebox from tkinter
+tk

@@ -64,20 +64,8 @@ python3 main.py
 
 ![пример подсветки кода](img/example_highlight.png)  
 
-# Команды для установки библиотек
+# Команда для установки библиотек
 
 ```
-pip install tk
-```  
-
+pip install -r src/requirements.txt
 ```
-pip install re
-```  
-
-```
-pip install json
-```  
-
-```
-pip install os
-```  
